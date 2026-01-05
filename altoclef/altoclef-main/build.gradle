@@ -18,7 +18,8 @@ repositories {
         url = "https://gaucho-matrero.github.io/maven/"
     }
     flatDir {
-        dirs '../baritone/build/libs'
+        // Fix: Point to the actual build location of our SawBot Baritone
+        dirs '../../baritone/baritone-1.19.4/fabric/build/libs'
     }
 }
 
@@ -42,14 +43,9 @@ dependencies {
     shadow('com.fasterxml.jackson.core:jackson-annotations:2.10.1')
     shadow('com.fasterxml.jackson.core:jackson-databind:2.10.1')
 
-    // Thank you georgeagostino for fixing my garbage
-    if (getProject().hasProperty("altoclef.development")) {
-        // Must run build from baritone-plus once
-        modImplementation 'baritone-api-fabric:baritone-unoptimized-fabric:1.18.2'
-    } else {
-        modImplementation "cabaletta:baritone-unoptimized-fabric:1.18.2"
-        include "cabaletta:baritone-unoptimized-fabric:1.18.2"
-    }
+    // Fix: Use our locally built SawBot Baritone
+    modImplementation "baritone-api-fabric:baritone-unoptimized-fabric:1.9.5"
+    // include "baritone-api-fabric:baritone-unoptimized-fabric:1.9.5" // optional: jar-in-jar
     //modImplementation 'baritone-api-fabric:baritone-api-fabric:1.6.3'
     //implementation files('baritone-plus/build/libs/baritone-unoptimized-fabric-1.6.3.jar')
 }
