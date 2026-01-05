@@ -19,7 +19,7 @@ repositories {
     }
     flatDir {
         // Fix: Point to the actual build location of our SawBot Baritone
-        dirs '../../baritone/baritone-1.19.4/fabric/build/libs'
+        dirs "${project.rootDir}/../../baritone/baritone-1.19.4/fabric/build/libs"
     }
 }
 
