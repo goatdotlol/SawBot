@@ -43,7 +43,7 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 import net.minecraft.world.chunk.EmptyChunk;
 
 import java.io.*;
@@ -56,7 +56,8 @@ import java.util.Scanner;
  * As solonovamax suggested, this stuff should REALLY be moved to unit tests
  * https://github.com/adrisj7-AltoClef/altoclef/pull/7#discussion_r641792377
  * but getting timed tests and testing worlds set up in Minecraft might be
- * challenging, so this is the temporary resting place for garbage test code for now.
+ * challenging, so this is the temporary resting place for garbage test code for
+ * now.
  */
 @SuppressWarnings("EnhancedSwitchMigration")
 public class Playground {
@@ -64,55 +65,57 @@ public class Playground {
     public static void IDLE_TEST_INIT_FUNCTION(AltoClef mod) {
         // Test code here
 
-        // Print all uncatalogued resources as well as resources that don't have a corresponding item
+        // Print all uncatalogued resources as well as resources that don't have a
+        // corresponding item
         /*
-        Set<String> collectable = new HashSet<>(TaskCatalogue.resourceNames());
-        Set<String> allItems = new HashSet<>();
+         * Set<String> collectable = new HashSet<>(TaskCatalogue.resourceNames());
+         * Set<String> allItems = new HashSet<>();
+         * 
+         * List<String> notCollected = new ArrayList<>();
+         * 
+         * for (Identifier id : Registry.ITEM.getIds()) {
+         * Item item = Registry.ITEM.get(id);
+         * String name = ItemUtil.trimItemName(item.getTranslationKey());
+         * allItems.add(name);
+         * if (!collectable.contains(name)) {
+         * notCollected.add(name);
+         * }
+         * }
+         * 
+         * List<String> notAnItem = new ArrayList<>();
+         * for (String cataloguedName : collectable) {
+         * if (!allItems.contains(cataloguedName)) {
+         * notAnItem.add(cataloguedName);
+         * }
+         * }
+         * 
+         * notCollected.sort(String::compareTo);
+         * notAnItem.sort(String::compareTo);
+         * 
+         * Function<List<String>, String> temp = (list) -> {
+         * StringBuilder result = new StringBuilder("");
+         * for (String name : list) {
+         * result.append(name).append("\n");
+         * }
+         * return result.toString();
+         * };
+         * 
+         * Debug.logInternal("NOT COLLECTED YET:\n" + temp.apply(notCollected));
+         * Debug.logInternal("\n\n\n");
+         * Debug.logInternal("NOT ITEMS:\n" + temp.apply(notAnItem));
+         */
 
-        List<String> notCollected = new ArrayList<>();
-
-        for (Identifier id : Registry.ITEM.getIds()) {
-            Item item = Registry.ITEM.get(id);
-            String name = ItemUtil.trimItemName(item.getTranslationKey());
-            allItems.add(name);
-            if (!collectable.contains(name)) {
-                notCollected.add(name);
-            }
-        }
-
-        List<String> notAnItem = new ArrayList<>();
-        for (String cataloguedName : collectable) {
-            if (!allItems.contains(cataloguedName)) {
-                notAnItem.add(cataloguedName);
-            }
-        }
-
-        notCollected.sort(String::compareTo);
-        notAnItem.sort(String::compareTo);
-
-        Function<List<String>, String> temp = (list) -> {
-            StringBuilder result = new StringBuilder("");
-            for (String name : list) {
-                result.append(name).append("\n");
-            }
-            return result.toString();
-        };
-
-        Debug.logInternal("NOT COLLECTED YET:\n" + temp.apply(notCollected));
-        Debug.logInternal("\n\n\n");
-        Debug.logInternal("NOT ITEMS:\n" + temp.apply(notAnItem));
-        */
-
-        /* Print all catalogued resources
-
-        List<String> resources = new ArrayList<>(TaskCatalogue.resourceNames());
-        resources.sort(String::compareTo);
-        StringBuilder result = new StringBuilder("ALL RESOURCES:\n");
-        for (String name : resources) {
-            result.append(name).append("\n");
-        }
-        Debug.logInternal("We got em:\n" + result.toString());
-
+        /*
+         * Print all catalogued resources
+         * 
+         * List<String> resources = new ArrayList<>(TaskCatalogue.resourceNames());
+         * resources.sort(String::compareTo);
+         * StringBuilder result = new StringBuilder("ALL RESOURCES:\n");
+         * for (String name : resources) {
+         * result.append(name).append("\n");
+         * }
+         * Debug.logInternal("We got em:\n" + result.toString());
+         * 
          */
     }
 
@@ -121,7 +124,7 @@ public class Playground {
     }
 
     public static void TEMP_TEST_FUNCTION(AltoClef mod, String arg) {
-        //mod.runUserTask();
+        // mod.runUserTask();
         Debug.logMessage("Running test...");
 
         switch (arg) {
@@ -148,12 +151,14 @@ public class Playground {
                 mod.runUserTask(new PlaceStructureBlockTask(new BlockPos(10, 6, 10)));
                 break;
             case "place": {
-                //BlockPos targetPos = new BlockPos(0, 6, 0);
-                //mod.runUserTask(new PlaceSignTask(targetPos, "Hello"));
-                //Direction direction = Direction.WEST;
-                //mod.runUserTask(new InteractItemWithBlockTask(TaskCatalogue.getItemTarget("lava_bucket", 1), direction, targetPos, false));
+                // BlockPos targetPos = new BlockPos(0, 6, 0);
+                // mod.runUserTask(new PlaceSignTask(targetPos, "Hello"));
+                // Direction direction = Direction.WEST;
+                // mod.runUserTask(new
+                // InteractItemWithBlockTask(TaskCatalogue.getItemTarget("lava_bucket", 1),
+                // direction, targetPos, false));
                 mod.runUserTask(new PlaceBlockNearbyTask(Blocks.CRAFTING_TABLE, Blocks.FURNACE));
-                //mod.runUserTask(new PlaceStructureBlockTask(new BlockPos(472, 24, -324)));
+                // mod.runUserTask(new PlaceStructureBlockTask(new BlockPos(472, 24, -324)));
                 break;
             }
             case "deadmeme":
@@ -171,17 +176,18 @@ public class Playground {
                 // 2*3 (pick) + 1 = 7 sticks
                 // 4 planks
                 /*
-                mod.runUserTask(TaskCatalogue.getSquashedItemTask(
-                        new ItemTarget("diamond_chestplate", 1),
-                        new ItemTarget("diamond_leggings", 1),
-                        new ItemTarget("diamond_helmet", 1),
-                        new ItemTarget("diamond_boots", 1),
-                        new ItemTarget("diamond_pickaxe", 3),
-                        new ItemTarget("diamond_sword", 1),
-                        new ItemTarget("crafting_table", 1)
-                ));
+                 * mod.runUserTask(TaskCatalogue.getSquashedItemTask(
+                 * new ItemTarget("diamond_chestplate", 1),
+                 * new ItemTarget("diamond_leggings", 1),
+                 * new ItemTarget("diamond_helmet", 1),
+                 * new ItemTarget("diamond_boots", 1),
+                 * new ItemTarget("diamond_pickaxe", 3),
+                 * new ItemTarget("diamond_sword", 1),
+                 * new ItemTarget("crafting_table", 1)
+                 * ));
                  */
-                mod.runUserTask(new EquipArmorTask(Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_HELMET, Items.DIAMOND_BOOTS));
+                mod.runUserTask(new EquipArmorTask(Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS,
+                        Items.DIAMOND_HELMET, Items.DIAMOND_BOOTS));
                 break;
             case "stacked2":
                 mod.runUserTask(new EquipArmorTask(Items.DIAMOND_CHESTPLATE));
@@ -211,8 +217,11 @@ public class Playground {
                 Debug.logMessage("Testing avoid from -1000, -1000, -1000 to 1000, 1000, 1000");
                 break;
             case "portal":
-                //mod.runUserTask(new EnterNetherPortalTask(new ConstructNetherPortalBucketTask(), Dimension.NETHER));
-                mod.runUserTask(new EnterNetherPortalTask(new ConstructNetherPortalObsidianTask(), WorldHelper.getCurrentDimension() == Dimension.OVERWORLD? Dimension.NETHER : Dimension.OVERWORLD));
+                // mod.runUserTask(new EnterNetherPortalTask(new
+                // ConstructNetherPortalBucketTask(), Dimension.NETHER));
+                mod.runUserTask(new EnterNetherPortalTask(new ConstructNetherPortalObsidianTask(),
+                        WorldHelper.getCurrentDimension() == Dimension.OVERWORLD ? Dimension.NETHER
+                                : Dimension.OVERWORLD));
                 break;
             case "kill":
                 List<ZombieEntity> zombs = mod.getEntityTracker().getTrackedEntities(ZombieEntity.class);
@@ -231,33 +240,34 @@ public class Playground {
                         sleepSec(1);
                     }
 
-                    Item[] c = new Item[]{Items.COBBLESTONE};
-                    Item[] s = new Item[]{Items.STICK};
-                    CraftingRecipe recipe = CraftingRecipe.newShapedRecipe("test pickaxe", new Item[][]{c, c, c, null, s, null, null, s, null}, 1);
+                    Item[] c = new Item[] { Items.COBBLESTONE };
+                    Item[] s = new Item[] { Items.STICK };
+                    CraftingRecipe recipe = CraftingRecipe.newShapedRecipe("test pickaxe",
+                            new Item[][] { c, c, c, null, s, null, null, s, null }, 1);
 
                     mod.runUserTask(new CraftGenericManuallyTask(new RecipeTarget(Items.STONE_PICKAXE, 1, recipe)));
                     /*
-                    Item toEquip = Items.BUCKET;//Items.AIR;
-                    Slot target = PlayerInventorySlot.getEquipSlot(EquipmentSlot.MAINHAND);
-
-                    InventoryTracker t = mod.getItemStorage();
-
-                    // Already equipped
-                    if (t.getItemStackInSlot(target).getItem() == toEquip) {
-                        Debug.logMessage("Already equipped.");
-                    } else {
-                        List<Integer> itemSlots = t.getInventorySlotsWithItem(toEquip);
-                        if (itemSlots.size() != 0) {
-                            int slot = itemSlots.get(0);
-                            t.swapItems(Slot.getFromInventory(slot), target);
-                            Debug.logMessage("Equipped via swap");
-                        } else {
-                            Debug.logWarning("Failed to equip item " + toEquip.getTranslationKey());
-                        }
-                    }
+                     * Item toEquip = Items.BUCKET;//Items.AIR;
+                     * Slot target = PlayerInventorySlot.getEquipSlot(EquipmentSlot.MAINHAND);
+                     * 
+                     * InventoryTracker t = mod.getItemStorage();
+                     * 
+                     * // Already equipped
+                     * if (t.getItemStackInSlot(target).getItem() == toEquip) {
+                     * Debug.logMessage("Already equipped.");
+                     * } else {
+                     * List<Integer> itemSlots = t.getInventorySlotsWithItem(toEquip);
+                     * if (itemSlots.size() != 0) {
+                     * int slot = itemSlots.get(0);
+                     * t.swapItems(Slot.getFromInventory(slot), target);
+                     * Debug.logMessage("Equipped via swap");
+                     * } else {
+                     * Debug.logWarning("Failed to equip item " + toEquip.getTranslationKey());
+                     * }
+                     * }
                      */
                 }).start();
-                //mod.getItemStorage().equipItem(Items.AIR);
+                // mod.getItemStorage().equipItem(Items.AIR);
                 break;
             case "food":
                 mod.runUserTask(new CollectFoodTask(20));
@@ -288,7 +298,8 @@ public class Playground {
                     }
                     fw.flush();
                     fw.close();
-                    Debug.logMessage(unobtainable + " / " + total + " unobtainable items. Wrote a list of items to \"" + f.getAbsolutePath() + "\".");
+                    Debug.logMessage(unobtainable + " / " + total + " unobtainable items. Wrote a list of items to \""
+                            + f.getAbsolutePath() + "\".");
                 } catch (IOException e) {
                     Debug.logWarning(e.toString());
                 }
@@ -306,8 +317,8 @@ public class Playground {
                 // Creates a mini valley of crafting tables.
                 BlockPos from = mod.getPlayer().getBlockPos().add(new Vec3i(-100, -20, -100));
                 BlockPos to = mod.getPlayer().getBlockPos().add(new Vec3i(100, 255, 100));
-                Block[] toFind = new Block[]{Blocks.GRASS_BLOCK};// Blocks.COBBLESTONE};
-                ItemTarget toReplace = new ItemTarget("crafting_table");//"stone");
+                Block[] toFind = new Block[] { Blocks.GRASS_BLOCK };// Blocks.COBBLESTONE};
+                ItemTarget toReplace = new ItemTarget("crafting_table");// "stone");
                 mod.runUserTask(new ReplaceBlocksTask(toReplace, from, to, toFind));
                 break;
             case "bed":
@@ -368,6 +379,5 @@ public class Playground {
             e.printStackTrace();
         }
     }
-
 
 }

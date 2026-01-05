@@ -44,7 +44,7 @@ dependencies {
     shadow('com.fasterxml.jackson.core:jackson-databind:2.10.1')
 
     // Fix: Use our locally built SawBot Baritone
-    modImplementation "baritone-api-fabric:baritone-unoptimized-fabric:1.9.5"
+    modImplementation "baritone:baritone-unoptimized-fabric:1.9.5"
     // include "baritone-api-fabric:baritone-unoptimized-fabric:1.9.5" // optional: jar-in-jar
     //modImplementation 'baritone-api-fabric:baritone-api-fabric:1.6.3'
     //implementation files('baritone-plus/build/libs/baritone-unoptimized-fabric-1.6.3.jar')

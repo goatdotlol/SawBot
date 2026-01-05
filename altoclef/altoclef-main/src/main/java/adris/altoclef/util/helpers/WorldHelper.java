@@ -19,7 +19,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.util.math.*;
-import net.minecraft.util.registry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
@@ -39,12 +39,14 @@ public interface WorldHelper {
      * Get the number of in-game ticks the game/world has been active for.
      */
     static int getTicks() {
-        ClientConnection con = Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).getConnection();
+        ClientConnection con = Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler())
+                .getConnection();
         return ((ClientConnectionAccessor) con).getTicks();
     }
 
     static Vec3d toVec3d(BlockPos pos) {
-        if (pos == null) return null;
+        if (pos == null)
+            return null;
         return new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
     }
 
@@ -55,6 +57,7 @@ public interface WorldHelper {
     static Vec3i toVec3i(Vec3d pos) {
         return new Vec3i(pos.getX(), pos.getY(), pos.getZ());
     }
+
     static BlockPos toBlockPos(Vec3d pos) {
         return new BlockPos(pos.getX(), pos.getY(), pos.getZ());
     }
@@ -63,11 +66,13 @@ public interface WorldHelper {
         BlockState s = mod.getWorld().getBlockState(pos);
         if (s.getBlock() instanceof FluidBlock) {
             // Only accept still fluids.
-            if (!s.getFluidState().isStill() && onlyAcceptStill) return false;
+            if (!s.getFluidState().isStill() && onlyAcceptStill)
+                return false;
             int level = s.getFluidState().getLevel();
             // Ignore if there's liquid above, we can't tell if it's a source block or not.
             BlockState above = mod.getWorld().getBlockState(pos.up());
-            if (above.getBlock() instanceof FluidBlock) return false;
+            if (above.getBlock() instanceof FluidBlock)
+                return false;
             return level == 8;
         }
         return false;
@@ -75,35 +80,43 @@ public interface WorldHelper {
 
     static double distanceXZSquared(Vec3d from, Vec3d to) {
         Vec3d delta = to.subtract(from);
-        return delta.x*delta.x + delta.z*delta.z;
+        return delta.x * delta.x + delta.z * delta.z;
     }
+
     static double distanceXZ(Vec3d from, Vec3d to) {
         return Math.sqrt(distanceXZSquared(from, to));
     }
+
     static boolean inRangeXZ(Vec3d from, Vec3d to, double range) {
-        return distanceXZSquared(from, to) < range*range;
+        return distanceXZSquared(from, to) < range * range;
     }
+
     static boolean inRangeXZ(BlockPos from, BlockPos to, double range) {
         return inRangeXZ(toVec3d(from), toVec3d(to), range);
     }
+
     static boolean inRangeXZ(Entity entity, Vec3d to, double range) {
         return inRangeXZ(entity.getPos(), to, range);
     }
+
     static boolean inRangeXZ(Entity entity, BlockPos to, double range) {
         return inRangeXZ(entity, toVec3d(to), range);
     }
+
     static boolean inRangeXZ(Entity entity, Entity to, double range) {
         return inRangeXZ(entity, to.getPos(), range);
     }
 
     static Dimension getCurrentDimension() {
         ClientWorld world = MinecraftClient.getInstance().world;
-        if (world == null) return Dimension.OVERWORLD;
-        if (world.getDimension().isUltrawarm()) return Dimension.NETHER;
-        if (world.getDimension().isNatural()) return Dimension.OVERWORLD;
+        if (world == null)
+            return Dimension.OVERWORLD;
+        if (world.getDimension().isUltrawarm())
+            return Dimension.NETHER;
+        if (world.getDimension().isNatural())
+            return Dimension.OVERWORLD;
         return Dimension.END;
     }
-
 
     static boolean isSolid(AltoClef mod, BlockPos pos) {
         return mod.getWorld().getBlockState(pos).isSolidBlock(mod.getWorld(), pos);
@@ -123,6 +136,7 @@ public interface WorldHelper {
         }
         return null;
     }
+
     /**
      * Get the "foot" of a block with a bed, if the block is a bed.
      */
@@ -139,7 +153,8 @@ public interface WorldHelper {
     }
 
     // Get the left side of a chest, given a block pos.
-    // Used to consistently identify whether a double chest is part of the same chest.
+    // Used to consistently identify whether a double chest is part of the same
+    // chest.
     static BlockPos getChestLeft(AltoClef mod, BlockPos posWithChest) {
         BlockState state = mod.getWorld().getBlockState(posWithChest);
         if (state.getBlock() instanceof ChestBlock) {
@@ -165,7 +180,8 @@ public interface WorldHelper {
     static int getGroundHeight(AltoClef mod, int x, int z) {
         for (int y = WORLD_CEILING_Y; y >= WORLD_FLOOR_Y; --y) {
             BlockPos check = new BlockPos(x, y, z);
-            if (isSolid(mod, check)) return y;
+            if (isSolid(mod, check))
+                return y;
         }
         return -1;
     }
@@ -189,7 +205,8 @@ public interface WorldHelper {
         Set<Block> possibleBlocks = new HashSet<>(Arrays.asList(groundBlocks));
         for (int y = WORLD_CEILING_Y; y >= WORLD_FLOOR_Y; --y) {
             BlockPos check = new BlockPos(x, y, z);
-            if (possibleBlocks.contains(mod.getWorld().getBlockState(check).getBlock())) return y;
+            if (possibleBlocks.contains(mod.getWorld().getBlockState(check).getBlock()))
+                return y;
 
         }
         return -1;
@@ -197,7 +214,8 @@ public interface WorldHelper {
 
     static boolean canBreak(AltoClef mod, BlockPos pos) {
         // JANK: Temporarily check if we can break WITHOUT paused interactions.
-        // Not doing this creates bugs where we loop back and forth through the nether portal and stuff.
+        // Not doing this creates bugs where we loop back and forth through the nether
+        // portal and stuff.
         boolean prevInteractionPaused = mod.getExtraBaritoneSettings().isInteractionPaused();
         mod.getExtraBaritoneSettings().setInteractionPaused(false);
         boolean result = mod.getWorld().getBlockState(pos).getHardness(mod.getWorld(), pos) >= 0
@@ -211,12 +229,14 @@ public interface WorldHelper {
     static boolean isInNetherPortal(AltoClef mod) {
         if (mod.getPlayer() == null)
             return false;
-        return ((EntityAccessor)mod.getPlayer()).isInNetherPortal();
+        return ((EntityAccessor) mod.getPlayer()).isInNetherPortal();
     }
 
     static boolean dangerousToBreakIfRightAbove(AltoClef mod, BlockPos toBreak) {
-        // There might be mumbo jumbo next to it, we fall and we get killed by lava or something.
-        if (MovementHelper.avoidBreaking(mod.getClientBaritone().bsi, toBreak.getX(), toBreak.getY(), toBreak.getZ(), mod.getWorld().getBlockState(toBreak))) {
+        // There might be mumbo jumbo next to it, we fall and we get killed by lava or
+        // something.
+        if (MovementHelper.avoidBreaking(mod.getClientBaritone().bsi, toBreak.getX(), toBreak.getY(), toBreak.getZ(),
+                mod.getWorld().getBlockState(toBreak))) {
             return true;
         }
         // Fall down
@@ -228,7 +248,8 @@ public interface WorldHelper {
             if (MovementHelper.isLava(s))
                 return true;
             // Always fall in water
-            // TODO: If there's a 1 meter thick layer of water and then a massive drop below, the bot will think it is safe.
+            // TODO: If there's a 1 meter thick layer of water and then a massive drop
+            // below, the bot will think it is safe.
             if (MovementHelper.isWater(s))
                 return false;
             // We hit ground, depends
@@ -248,7 +269,8 @@ public interface WorldHelper {
         if (mod.getModSettings().shouldAvoidOcean()) {
             // 45 is roughly the ocean floor. We add 2 just cause why not.
             // This > 47 can clearly cause a stuck bug.
-            if (mod.getPlayer().getY() > 47 && mod.getChunkTracker().isChunkLoaded(pos) && isOcean(mod.getWorld().getBiome(pos))) { // But if we stuck, add more oceans
+            if (mod.getPlayer().getY() > 47 && mod.getChunkTracker().isChunkLoaded(pos)
+                    && isOcean(mod.getWorld().getBiome(pos))) { // But if we stuck, add more oceans
                 // Block is in an ocean biome. If it's below sea level...
                 if (pos.getY() < 64 && getGroundHeight(mod, pos.getX(), pos.getZ(), Blocks.WATER) > pos.getY()) {
                     return false;
@@ -258,21 +280,21 @@ public interface WorldHelper {
         return !mod.getBlockTracker().unreachable(pos);
     }
 
-    static boolean isOcean(RegistryEntry<Biome> b){
+    static boolean isOcean(RegistryEntry<Biome> b) {
         return (b.matchesKey(BiomeKeys.OCEAN)
-        || b.matchesKey(BiomeKeys.COLD_OCEAN)
-        || b.matchesKey(BiomeKeys.DEEP_COLD_OCEAN)
-        || b.matchesKey(BiomeKeys.DEEP_OCEAN)
-        || b.matchesKey(BiomeKeys.DEEP_FROZEN_OCEAN)
-        || b.matchesKey(BiomeKeys.DEEP_LUKEWARM_OCEAN)
-        || b.matchesKey(BiomeKeys.LUKEWARM_OCEAN)
-        || b.matchesKey(BiomeKeys.WARM_OCEAN)
-        || b.matchesKey(BiomeKeys.FROZEN_OCEAN));
+                || b.matchesKey(BiomeKeys.COLD_OCEAN)
+                || b.matchesKey(BiomeKeys.DEEP_COLD_OCEAN)
+                || b.matchesKey(BiomeKeys.DEEP_OCEAN)
+                || b.matchesKey(BiomeKeys.DEEP_FROZEN_OCEAN)
+                || b.matchesKey(BiomeKeys.DEEP_LUKEWARM_OCEAN)
+                || b.matchesKey(BiomeKeys.LUKEWARM_OCEAN)
+                || b.matchesKey(BiomeKeys.WARM_OCEAN)
+                || b.matchesKey(BiomeKeys.FROZEN_OCEAN));
     }
 
     static boolean isAir(AltoClef mod, BlockPos pos) {
         return mod.getBlockTracker().blockIsValid(pos, Blocks.AIR, Blocks.CAVE_AIR, Blocks.VOID_AIR);
-        //return state.isAir() || isAir(state.getBlock());
+        // return state.isAir() || isAir(state.getBlock());
     }
 
     static boolean isAir(Block block) {
@@ -289,8 +311,7 @@ public interface WorldHelper {
                 || block instanceof CartographyTableBlock
                 || block instanceof EnchantingTableBlock
                 || block instanceof RedstoneOreBlock
-                || block instanceof BarrelBlock
-        );
+                || block instanceof BarrelBlock);
     }
 
     static boolean isInsidePlayer(AltoClef mod, BlockPos pos) {
@@ -300,7 +321,7 @@ public interface WorldHelper {
     static Iterable<BlockPos> getBlocksTouchingPlayer(AltoClef mod) {
         return getBlocksTouchingBox(mod, mod.getPlayer().getBoundingBox());
     }
-    
+
     static Iterable<BlockPos> getBlocksTouchingBox(AltoClef mod, Box box) {
         BlockPos min = new BlockPos(box.minX, box.minY, box.minZ);
         BlockPos max = new BlockPos(box.maxX, box.maxY, box.maxZ);
@@ -334,7 +355,8 @@ public interface WorldHelper {
     }
 
     static boolean fallingBlockSafeToBreak(BlockPos pos) {
-        BlockStateInterface bsi = new BlockStateInterface(BaritoneAPI.getProvider().getPrimaryBaritone().getPlayerContext());
+        BlockStateInterface bsi = new BlockStateInterface(
+                BaritoneAPI.getProvider().getPrimaryBaritone().getPlayerContext());
         World w = MinecraftClient.getInstance().world;
         assert w != null;
         while (isFallingBlock(pos)) {
@@ -368,9 +390,10 @@ public interface WorldHelper {
         }
         return pos;
     }
+
     static BlockPos getOverworldPosition(BlockPos pos) {
         if (getCurrentDimension() == Dimension.NETHER) {
-            pos = new BlockPos(pos.getX()*8, pos.getY(), pos.getZ()*8);
+            pos = new BlockPos(pos.getX() * 8, pos.getY(), pos.getZ() * 8);
         }
         return pos;
     }
@@ -379,6 +402,7 @@ public interface WorldHelper {
         Block b = mod.getWorld().getBlockState(block).getBlock();
         return isChest(b);
     }
+
     static boolean isChest(Block b) {
         return b instanceof ChestBlock || b instanceof EnderChestBlock;
     }
@@ -394,7 +418,7 @@ public interface WorldHelper {
             // You can sleep during thunderstorms
             if (world.isThundering() && world.isRaining())
                 return true;
-            time = (int)(world.getTimeOfDay() % 24000);
+            time = (int) (world.getTimeOfDay() % 24000);
         }
         // https://minecraft.fandom.com/wiki/Daylight_cycle
         return 12542 <= time && time <= 23992;
