@@ -7,15 +7,20 @@ import adris.altoclef.util.MiningRequirement;
 import adris.altoclef.util.ItemTarget;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.tag.ItemTags;
 
 public class CollectWoodTask extends ResourceTask {
 
     private final int _count;
+    private static final Item[] LOG_ITEMS = new Item[] {
+            Items.OAK_LOG, Items.BIRCH_LOG, Items.SPRUCE_LOG,
+            Items.JUNGLE_LOG, Items.ACACIA_LOG, Items.DARK_OAK_LOG,
+            Items.MANGROVE_LOG, Items.CHERRY_LOG
+    };
 
     public CollectWoodTask(int targetCount) {
-        super(new ItemTarget(ItemTags.LOGS, targetCount));
+        super(new ItemTarget(LOG_ITEMS, targetCount));
         _count = targetCount;
     }
 
@@ -31,8 +36,11 @@ public class CollectWoodTask extends ResourceTask {
 
     @Override
     protected Task onResourceTick(AltoClef mod) {
-        return new MineAndCollectTask(new ItemTarget(ItemTags.LOGS, 1), new Block[] { Blocks.OAK_LOG, Blocks.BIRCH_LOG,
-                Blocks.SPRUCE_LOG, Blocks.JUNGLE_LOG, Blocks.ACACIA_LOG, Blocks.DARK_OAK_LOG }, MiningRequirement.HAND);
+        return new MineAndCollectTask(new ItemTarget(LOG_ITEMS, 1), new Block[] {
+                Blocks.OAK_LOG, Blocks.BIRCH_LOG, Blocks.SPRUCE_LOG,
+                Blocks.JUNGLE_LOG, Blocks.ACACIA_LOG, Blocks.DARK_OAK_LOG,
+                Blocks.MANGROVE_LOG, Blocks.CHERRY_LOG
+        }, MiningRequirement.HAND);
     }
 
     @Override
