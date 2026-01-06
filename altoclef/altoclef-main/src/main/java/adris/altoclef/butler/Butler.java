@@ -7,15 +7,18 @@ import adris.altoclef.eventbus.events.ChatMessageEvent;
 import adris.altoclef.eventbus.events.TaskFinishedEvent;
 import adris.altoclef.ui.MessagePriority;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.MessageType;
+import net.minecraft.network.message.MessageType;
 
 /**
- * The butler system lets authorized players send commands to the bot to execute.
+ * The butler system lets authorized players send commands to the bot to
+ * execute.
  * <p>
  * This effectively makes the bot function as a servant, or butler.
  * <p>
- * Authorization is defined in "altoclef_butler_whitelist.txt" and "altoclef_butler_blacklist.txt"
- * and depends on the "useButlerWhitelist" and "useButlerBlacklist" settings in "altoclef_settings.json"
+ * Authorization is defined in "altoclef_butler_whitelist.txt" and
+ * "altoclef_butler_blacklist.txt"
+ * and depends on the "useButlerWhitelist" and "useButlerBlacklist" settings in
+ * "altoclef_settings.json"
  */
 public class Butler {
 
@@ -62,7 +65,7 @@ public class Butler {
         WhisperChecker.MessageResult result = this._whisperChecker.receiveMessage(_mod, ourName, msg);
         if (result != null) {
             this.receiveWhisper(result.from, result.message);
-        } else if (ButlerConfig.getInstance().whisperFormatDebug){
+        } else if (ButlerConfig.getInstance().whisperFormatDebug) {
             Debug.logMessage("    Not Parsing: MSG format not found.");
         }
     }
@@ -85,7 +88,9 @@ public class Butler {
                 Debug.logMessage("    Rejecting: User \"" + username + "\" is not authorized.");
             }
             if (ButlerConfig.getInstance().sendAuthorizationResponse) {
-                sendWhisper(username, ButlerConfig.getInstance().failedAuthorizationResposne.replace("{from}", username), MessagePriority.UNAUTHORIZED);
+                sendWhisper(username,
+                        ButlerConfig.getInstance().failedAuthorizationResposne.replace("{from}", username),
+                        MessagePriority.UNAUTHORIZED);
             }
         }
     }
@@ -126,7 +131,7 @@ public class Butler {
         _currentUser = username;
         sendWhisper("Command Executing: " + message, MessagePriority.TIMELY);
         String prefix = ButlerConfig.getInstance().requirePrefixMsg ? _mod.getModSettings().getCommandPrefix() : "";
-        AltoClef.getCommandExecutor().execute(prefix+message, () -> {
+        AltoClef.getCommandExecutor().execute(prefix + message, () -> {
             // On finish
             sendWhisper("Command Finished: " + message, MessagePriority.TIMELY);
             if (!_commandInstantRan) {
